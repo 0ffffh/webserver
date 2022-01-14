@@ -19,10 +19,10 @@ public class ProcessHeader {
         responseHeader.append(HTTP_200)
                 .append("Content-type: " + getContentType(path))
                 .append("Content-Length: " + length)
-                .append(System.getProperty("line.separator"))
-                .append(System.getProperty("line.separator"));
+                .append("\r\n\r\n");
 
-        System.out.println("RESPONSE 200=========================================");
+
+        System.out.println("====================================================");
         System.out.println(responseHeader);
         System.out.println("====================================================");
         return responseHeader.toString();
@@ -48,10 +48,10 @@ public class ProcessHeader {
         responseHeader.append("Date: ").append(date)
                 .append("Content-type: " + getContentType(""))
                 .append("Content-Length: " + end.length())
-                .append(System.getProperty("line.separator"))
+                .append("\r\n\r\n")
                 .append(end);
 
-        System.out.println("RESPONSE EROR=========================================");
+        System.out.println("====================================================");
         System.out.println(responseHeader);
         System.out.println("====================================================");
 
@@ -85,8 +85,7 @@ public class ProcessHeader {
 
     private String generateErrorPage(String error){
         StringBuilder response = new StringBuilder();
-        response.append(System.getProperty("line.separator"))
-                .append("<html>")
+                response.append("<html>")
                 .append("<head><title>").append(error.substring(9)).append("</title></head>")
                 .append("<body><center><h1>").append(error.substring(9)).append("</h1></center></body>")
                 .append("</html>");
