@@ -6,7 +6,7 @@ class HttpWorker {
 
     private final String appPath;
 
-    private ProcessHeader processHeader = new ProcessHeader();
+    private final ProcessHeader processHeader = new ProcessHeader();
 
     public HttpWorker(String appPath) {
         this.appPath= appPath;
@@ -18,7 +18,7 @@ class HttpWorker {
         String[] tempHeaderArray = tempRequestArray[0].split(" ");
         String header;
 
-        if(tempRequestArray == null || !tempRequestArray[0].startsWith("GET") ){
+        if(!tempRequestArray[0].startsWith("GET") ){
             header = processHeader.getHeader(501);
             socketWriter.write(header.getBytes(),0,header.length());
         }
@@ -35,14 +35,19 @@ class HttpWorker {
         File requestFile = new File(this.appPath, path);
         if (requestFile.isFile() && requestFile.canRead()){
             header = processHeader.getHeader(200, path, requestFile.length());
-            socketWriter.write(header.getBytes(),0,header.length());
+//            socketWriter.write(header.getBytes(),0,header.length());
             int length;
             byte[] buff = new byte[8192];
-            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(requestFile));){
+            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(requestFile))){
+                socketWriter.write(header.getBytes(),0,header.length());
                 while ((length = bufferedInputStream.read(buff)) != -1) {
                     socketWriter.write(buff, 0, length);
                 }
                 socketWriter.flush();
+            }  catch (IOException e) {
+                System.out.println("Can't upload file " + e + " internal server error");
+                header = processHeader.getHeader(500);
+                socketWriter.write(header.getBytes(),0,header.length());
             }
         } else {
             header = processHeader.getHeader(404);

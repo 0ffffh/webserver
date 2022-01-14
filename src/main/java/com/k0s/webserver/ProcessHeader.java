@@ -5,7 +5,9 @@ import java.util.Date;
 public class ProcessHeader {
     private static final String HTTP_200 = "HTTP/1.1 200 OK";
     private static final String HTTP_404 = "HTTP/1.1 404 Not Found";
+    private static final String HTTP_500 = "HTTP/1.1 500 Internal Server Error";
     private static final String HTTP_501 = "HTTP/1.1 501 Not Implemented";
+
 
     private final Date date = new Date();
 
@@ -32,11 +34,15 @@ public class ProcessHeader {
         String end = "";
         if (status == 404){
             responseHeader.append(HTTP_404);
-            end = generate404();
+            end = generateErrorPage(HTTP_404);
+        }
+        if (status == 500){
+            responseHeader.append(HTTP_500);
+            end = generateErrorPage(HTTP_500);
         }
         if (status == 501){
             responseHeader.append(HTTP_501);
-            end = generate501();
+            end = generateErrorPage(HTTP_501);
         }
 
         responseHeader.append("Date: ").append(date)
@@ -77,23 +83,12 @@ public class ProcessHeader {
         return "text/plain";
     }
 
-    private String generate404(){
+    private String generateErrorPage(String error){
         StringBuilder response = new StringBuilder();
         response.append(System.getProperty("line.separator"))
                 .append("<html>")
-                .append("<head><title>404 Not Found</title></head>")
-                .append("<body><center><h1>404 Not Found</h1></center></body>")
-                .append("</html>");
-
-        return response.toString();
-    }
-
-    private String generate501(){
-        StringBuilder response = new StringBuilder();
-        response.append(System.getProperty("line.separator"))
-                .append("<html>")
-                .append("<head><title>404 Not Found</title></head>")
-                .append("<body><center><h1>404 Not Found</h1></center></body>")
+                .append("<head><title>").append(error.substring(9)).append("</title></head>")
+                .append("<body><center><h1>").append(error.substring(9)).append("</h1></center></body>")
                 .append("</html>");
 
         return response.toString();
