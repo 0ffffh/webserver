@@ -1,5 +1,7 @@
 package com.k0s.webserver;
 
+import com.k0s.webserver.request.RequestHandler;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,8 +11,9 @@ import java.net.Socket;
 public class Server {
     private static final int PORT = 8080;
     private static final String DEFAULT_APP_PATH = "src/main/resources/";
+//    private static final String DEFAULT_APP_PATH = new File("").getAbsolutePath();
 
-    private HttpWorker httpWorker;
+
 
     private String appPath;
     private int port;
@@ -39,39 +42,31 @@ public class Server {
         this.appPath = path;
     }
 
-    public void start() throws IOException {
-        httpWorker = new HttpWorker(this.appPath);
-        listen();
-    }
 
     public void stop(){
         isOpen = false;
     }
 
-    private void listen() throws IOException {
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket(this.port)){
+            RequestHandler requestHandler = new RequestHandler(appPath);
             while (isOpen){
                 try (Socket socket = serverSocket.accept();
                      BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                      BufferedOutputStream socketWriter = new BufferedOutputStream(socket.getOutputStream()) ){
 
-                    String line;
-                    StringBuilder request = new StringBuilder();
-                    while (!(line = socketReader.readLine()).isEmpty()) {
-                        request.append(line);
-                        request.append(System.getProperty("line.separator"));
-                    }
-                    System.out.println(request);
+                    requestHandler.handle(socketReader, socketWriter);
 
-                    if (!request.isEmpty()){
-                        httpWorker.processingRequest(socketWriter,request.toString());
-                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         Server server = new Server();
         server.start();
     }
