@@ -2,10 +2,9 @@ package com.k0s.webserver.request;
 
 import com.k0s.webserver.headers.HttpMethod;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
+
 
 public class Request {
     private String uri;
@@ -47,12 +46,14 @@ public class Request {
 
     @Override
     public String toString() {
-        StringJoiner stringJoiner = new StringJoiner("\r\n");
-
-        stringJoiner.add(httpMethod.getMethod() + " " + uri + " " + httpVersion);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(httpMethod).append(" ").append(uri).append(" ").append(httpVersion);
         for (Map.Entry<String, String[]> entry : headers.entrySet()) {
-            stringJoiner.add(entry.getKey()+": "+ Arrays.toString(entry.getValue()));
+            sb.append("\r\n").append(entry.getKey()).append(": ");
+            for(String val: entry.getValue()){
+                sb.append(val).append(" ");
+            }
         }
-        return stringJoiner.toString();
+        return sb.toString();
     }
 }

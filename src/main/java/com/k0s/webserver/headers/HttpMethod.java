@@ -1,19 +1,14 @@
 package com.k0s.webserver.headers;
 
 public enum HttpMethod {
-    GET("GET");
+    GET;
 
-    private final String method;
-
-    public boolean hasMethod(){
-        return method != null;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    HttpMethod(String method) {
-        this.method = method;
+    public static boolean hasMethod(String method){
+        for (HttpMethod httpMethod : HttpMethod.values()) {
+            if (httpMethod.name().equalsIgnoreCase(method)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,8 +1,9 @@
-package com.k0s.webserver.request;
+package com.k0s.webserver;
 
 import com.k0s.webserver.headers.HttpStatus;
+import com.k0s.webserver.request.Request;
+import com.k0s.webserver.request.RequestParser;
 import com.k0s.webserver.response.Response;
-import com.k0s.webserver.response.ResponseWriter;
 
 import java.io.*;
 
@@ -19,17 +20,13 @@ public class RequestHandler {
         Request request = new Request();
         try {
             request = RequestParser.parseRequest(socketReader);
-        } catch (IOException e) {
-
-            ResponseWriter.writeError(socketWriter, HttpStatus.BAD_REQUEST);
-            e.printStackTrace();
+        } catch (Exception e) { ///
+            System.out.println(e);
+            ResponseWriter.writeResponse(socketWriter, HttpStatus.valueOf(e.toString()));
+            return;
         }
 
         Response response = new Response(webAppPath, request);
-
-//        System.out.println(response.getHeader());
-//        System.out.println(response.getFile());
-
         ResponseWriter.writeResponse(socketWriter, response);
     }
 }
