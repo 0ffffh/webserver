@@ -10,19 +10,19 @@ import java.io.*;
 public class RequestHandler {
 
     private final String webAppPath;
-
+    private Request request;
 
     public RequestHandler(String webAppPath){
         this.webAppPath = webAppPath;
     }
 
     public void handle(BufferedReader socketReader, BufferedOutputStream socketWriter) throws IOException {
-        Request request = new Request();
+
         try {
             request = RequestParser.parseRequest(socketReader);
         } catch (Exception e) { ///
-            System.out.println(e);
-            ResponseWriter.writeResponse(socketWriter, HttpStatus.valueOf(e.toString()));
+            e.printStackTrace();
+            ResponseWriter.writeResponse(socketWriter, HttpStatus.BAD_REQUEST);
             return;
         }
 

@@ -9,10 +9,10 @@ import java.io.IOException;
 public class RequestParser {
 
     public static Request parseRequest(BufferedReader socketReader) throws IOException {
-        String line;
         Request request = new Request();
-        parseOptions(socketReader.readLine(), request);
-        while (!(line = socketReader.readLine()).isEmpty()) {
+        String line = socketReader.readLine();
+        parseOptions(line, request);
+        while ((line = socketReader.readLine()) != null && !line.isEmpty()){
             parseHeaders(line, request);
         }
         System.out.println(request);
@@ -29,13 +29,16 @@ public class RequestParser {
             }
     }
 
-    private static void parseOptions(String s, Request request) {
-        String[] options = s.split("\\s");
+    private static void parseOptions(String statusLine, Request request) {
+        if (statusLine == null || statusLine.isEmpty()) {
+            throw new IllegalArgumentException( statusLine + " " + HttpStatus.BAD_REQUEST.toString());
+        }
+        String[] options = statusLine.split("\\s");
         if (options.length != 3 || !options[1].startsWith("/") || !options[2].toUpperCase().startsWith("HTTP/")) {
-            throw new IllegalArgumentException(HttpStatus.BAD_REQUEST.toString());
+            throw new IllegalArgumentException(statusLine + " " + HttpStatus.BAD_REQUEST.toString());
         }
         if (!HttpMethod.hasMethod(options[0])){
-            throw new IllegalStateException(HttpStatus.NOT_IMPLEMENTED.toString());
+            throw new IllegalStateException(options[0] + " " + HttpStatus.NOT_IMPLEMENTED.toString());
         }
         request.setHttpMethod(HttpMethod.valueOf(options[0]));
         request.setUri(options[1]);
