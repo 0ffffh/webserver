@@ -47,6 +47,7 @@ public class ContentReader {
     }
 
     public void setError(HttpStatus httpStatus){
+        this.httpStatus = httpStatus;
         String htmlPage = PageGenerator.getPage(httpStatus);
         header = getHeader(httpStatus, "", htmlPage.length());
         InputStream targetStream = new ByteArrayInputStream(htmlPage.getBytes());
