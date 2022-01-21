@@ -19,7 +19,7 @@ public class ResponseWriter {
 
         }  catch (IOException e) {
             System.out.println("Can't upload file " + e + " internal server error");
-            writeResponse(socketWriter, HttpStatus.INTERNAL_SERVER_ERROR);
+            writeResponse(socketWriter, HttpStatus.INTERNAL_SERVER_ERROR); ///???
         }
     }
 

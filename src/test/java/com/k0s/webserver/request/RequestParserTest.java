@@ -14,14 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RequestParserTest {
 
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     @DisplayName("Request parser normal request")
     void parseRequest() throws IOException {
