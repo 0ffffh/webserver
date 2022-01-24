@@ -13,7 +13,7 @@ public class ResponseWriter {
 
 
     public static void writeResponse(BufferedOutputStream socketWriter, Response response) throws IOException {
-        try (BufferedInputStream bufferedInputStream = response.getBufferedInputStream()){
+        try (BufferedInputStream bufferedInputStream = response.getContent()){
 
             writeToSocket(socketWriter,bufferedInputStream, response.getHeader());
 

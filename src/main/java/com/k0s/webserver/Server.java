@@ -7,8 +7,8 @@ import java.net.Socket;
 
 public class Server {
     private static final int PORT = 8080;
-//    private static final String DEFAULT_APP_PATH = "src/main/resources/";
-    private static final String DEFAULT_APP_PATH = new File("").getAbsolutePath();
+    private static final String DEFAULT_APP_PATH = "src/main/resources/";
+//    private static final String DEFAULT_APP_PATH = new File(".").getAbsolutePath();
 
 
 
@@ -65,7 +65,6 @@ public class Server {
 
     public static void main(String[] args)  {
         Server server = new Server();
-        server.setWebAppPath("/home/k0s/tmp/webApp");
         server.start();
     }
 }

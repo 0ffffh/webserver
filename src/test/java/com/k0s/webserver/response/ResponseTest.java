@@ -6,10 +6,7 @@ import com.k0s.webserver.request.Request;
 import com.k0s.webserver.request.RequestParser;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,10 +16,12 @@ class ResponseTest {
     void getStatus() throws IOException {
         String appPath = "src/main/resources/";
         String httpRequest = "GET / HTTP/1.1";
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
                 new ByteArrayInputStream(httpRequest.getBytes())));
         Request request = RequestParser.parseRequest(bufferedReader);
-        Response response = new Response(appPath,request);
+        Response response = new ContentReader(appPath, request);
+
 
         assertEquals(HttpStatus.OK,response.getHttpStatus());
     }

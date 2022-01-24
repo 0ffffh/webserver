@@ -3,6 +3,7 @@ package com.k0s.webserver;
 import com.k0s.webserver.headers.HttpStatus;
 import com.k0s.webserver.request.Request;
 import com.k0s.webserver.request.RequestParser;
+import com.k0s.webserver.response.ContentReader;
 import com.k0s.webserver.response.Response;
 
 import java.io.*;
@@ -26,7 +27,8 @@ public class RequestHandler {
             return;
         }
 
-        Response response = new Response(webAppPath, request);
+//        Response response = new Response(webAppPath, request);
+        Response response = new ContentReader(webAppPath, request);
         ResponseWriter.writeResponse(socketWriter, response);
     }
 }
